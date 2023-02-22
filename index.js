@@ -4,26 +4,18 @@ import { readFileSync, writeFileSync } from "fs";
 
 const app = express();
 const port = 3000;
+const dataB = [];
 
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   const data = readFileSync("./data.json");
-  res.send(JSON.parse(data));
+  res.send(dataB);
 });
 
 app.post("/posts", (req, res) => {
-  const path = "./data.json";
-  const data = readFileSync(path);
-  const jsonData = JSON.parse(data);
-  jsonData.push(req.body);
-
-  try {
-    writeFileSync(path, JSON.stringify(jsonData), "utf8");
-    res.status(201).send({ status: "OK", data: req.body });
-  } catch (error) {
-    res.status(400).send({ message: "error" });
-  }
+  dataB.push(req.body);
+  res.status(201).send({ status: "OK", data: req.body });
 });
 
 app.listen(port, () => {
